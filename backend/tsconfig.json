@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "strict": true,
+      "outDir": "./built", // output directory is where the built js files will be put inside it
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "esModuleInterop": true
+    },
+    "include": ["src/**/*"], // all the typescript files inside the src folder should be select to be transpiled into js
+}
