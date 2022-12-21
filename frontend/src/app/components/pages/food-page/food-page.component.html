@@ -1,12 +1,13 @@
 <!-- if the food item is not present  -->
 <!-- food id is used since a new instance is created on food when it is undefined -->
+<!-- when connecting to the backend 'food.id' is again changed to food, since at the time the food is not ready => food is undefined -->
 <app-not-found
-  [visible]="!food.id"
+  [visible]="!food"
   notFoundMessage="Food Item Not Found"
   resetLink="Go Back To Home Page"
 ></app-not-found>
 
-<div *ngIf="food.id" class="container">
+<div *ngIf="food" class="container">
   <img [src]="food.imageUrl" [alt]="food.name">
 
   <div class="details">
