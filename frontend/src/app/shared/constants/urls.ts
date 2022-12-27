@@ -10,3 +10,6 @@ export const foods_tags_url = foods_url + '/tags';
 export const foods_by_search_url = foods_url + '/search/';
 export const foods_by_tag_url = foods_url + '/tag/';
 export const foods_by_id_url = foods_url + '/';
+
+
+export const user_login_url = base_url + '/api/users/login';
