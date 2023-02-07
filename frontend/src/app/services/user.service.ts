@@ -6,6 +6,8 @@ import { user_login_url } from '../shared/constants/urls';
 import { IUserLogin } from '../shared/interfaces/IUserLogin';
 import { User } from '../shared/models/user';
 
+const USER_KEY='User';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +15,7 @@ export class UserService {
 
   // user Subject and user Observable to expose the user data to outside of the user service
   // Behavior Subject has read and write mode inside it
-  private userSubject = new BehaviorSubject<User>(new User());
+  private userSubject = new BehaviorSubject<User>(this.getUserFromLocalStorage());
 
   // we don't want anything outside of the user service to write anything inside of the user Subject - public Observable
   public userObservable: Observable<User>;
@@ -33,6 +35,8 @@ export class UserService {
     return this.http.post<User>(user_login_url, userLogin).pipe(
       tap({
         next: (user) => { // happy message OR toast message --> ngx-toastr (3 things to do)
+          this.setUserToLocalStorage(user); // set user after successful login
+
           this.userSubject.next(user);
 
           this.toastrService.success(
@@ -46,5 +50,29 @@ export class UserService {
         }
       })
     )
+  }
+
+  // LogOut functionality
+  logout() {
+    this.userSubject.next(new User());
+    localStorage.removeItem(USER_KEY);
+    // refresh the page
+    window.location.reload();
+  }
+
+  // the User is not saved anywhere it is inside the RAM, we need to save the user inside the Local Storage,
+  // so we do not have to login again if we press the Login button - setter&getter
+  private setUserToLocalStorage(user: User) {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  }
+
+  private getUserFromLocalStorage():User{
+    const userJson = localStorage.getItem(USER_KEY);
+
+    // parse JSON and convert to User Object
+    if(userJson) {
+      return JSON.parse(userJson) as User;
+    }
+    return new User(); // new empty user
   }
 }
