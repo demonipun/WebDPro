@@ -4,26 +4,34 @@
 
     <!-- Reactive Form -->
     <form [formGroup]="loginForm" (ngSubmit)="submit()">
+      <input-container label="Email">
+        <!-- anything we put here will be added in the ng-content section -->
+        <input type="email" placeholder="Email" formControlName="email" />
+        <div class="error-list" *ngIf="fc['email'].errors && isSubmitted">Email either invalid or empty</div>
+      </input-container>
 
-      <div class="input-container">
+      <!-- ------------------------------------------ -->
+      <!-- <div class="input-container">
         <label>Email</label>
         <div>
           <input type="email" placeholder="Email" formControlName="email" />
-        </div>
+        </div> -->
 
-        <!-- Validation Error on email -->
-        <div class="error-list" *ngIf="fc['email'].errors && isSubmitted">
-          <!-- Error only is email is invalid or empty && login button is pressed -->
+              <!-- Validation Error on email -->
+        <!-- <div class="error-list" *ngIf="fc['email'].errors && isSubmitted"> -->
 
-          <!-- <div *ngIf="fc['email'].errors.required">
-            Email should not be empty
-          </div>
-          <div *ngIf="fc['email'].errors.email">
-            Email is invalid
-          </div> -->
-          Email either invalid or empty
+              <!-- Error only is email is invalid or empty && login button is pressed -->
+              <!-- <div *ngIf="fc['email'].errors.required">
+                Email should not be empty
+              </div>
+              <div *ngIf="fc['email'].errors.email">
+                Email is invalid
+              </div> -->
+
+          <!-- Email either invalid or empty
         </div>
-      </div>
+      </div> -->
+      <!-- -------------------------------------------- -->
 
       <div class="input-container">
         <label>Password</label>
