@@ -1,0 +1,13 @@
+<!-- copied from login-page.component.html and pasted here => 7-14 -->
+
+<!-- Can use text-input component in all the pages that
+we want to send something to the Server -->
+
+<input-container [label]="label">
+  <!-- anything we put here will be added in the ng-content section -->
+  <input [type]="type" [placeholder]="label" [formControl]="formControl" />
+
+  <!-- <div class="error-list" *ngIf="fc['email'].errors && isSubmitted">Email either invalid or empty</div> -->
+  <!-- the above line replaced when using Input Validator -->
+  <input-validation [control]="control" [showErrorsWhen]="showErrorsWhen"></input-validation>
+</input-container>

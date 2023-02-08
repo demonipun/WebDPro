@@ -4,14 +4,22 @@
 
     <!-- Reactive Form -->
     <form [formGroup]="loginForm" (ngSubmit)="submit()">
-      <input-container label="Email">
+      <!-- <input-container label="Email"> -->
         <!-- anything we put here will be added in the ng-content section -->
-        <input type="email" placeholder="Email" formControlName="email" />
+        <!-- <input type="email" placeholder="Email" formControlName="email" /> -->
 
         <!-- <div class="error-list" *ngIf="fc['email'].errors && isSubmitted">Email either invalid or empty</div> -->
         <!-- the above line replaced when using Input Validator -->
-        <input-validation [control]="fc['email']" [showErrorsWhen]="isSubmitted"></input-validation>
-      </input-container>
+        <!-- <input-validation [control]="fc['email']" [showErrorsWhen]="isSubmitted"></input-validation>
+      </input-container> -->
+
+      <!-- 7-14 commented and Combining input-container, input and input-validation to create text-input -->
+      <text-input
+      [control]="fc['email']"
+      [showErrorsWhen]="isSubmitted"
+      type="email"
+      label="Email">
+      </text-input>
 
       <!-- ------------------------------------------ -->
       <!-- <div class="input-container">
@@ -36,25 +44,36 @@
       </div> -->
       <!-- -------------------------------------------- -->
 
-      <div class="input-container">
+      <!-- <div class="input-container">
         <label>Password</label>
         <div>
           <input type="password" placeholder="Password" formControlName="password" />
-        </div>
+        </div> -->
 
         <!-- Validation Error on password -->
-        <div class="error-list" *ngIf="fc['password'].errors && isSubmitted">
+        <!-- <div class="error-list" *ngIf="fc['password'].errors && isSubmitted"> -->
           <!-- Error only is password is empty && login button is pressed -->
 
           <!-- <div *ngIf="fc['password'].errors.required">
             Password should not be empty
           </div> -->
-          Password should not be empty
+          <!-- Password should not be empty
         </div>
-      </div>
-      <div class="button">
+      </div> -->
+
+      <!-- 54-62 commented and Combining input-container, input and input-validation to create text-input -->
+      <text-input
+      [control]="fc['password']"
+      [showErrorsWhen]="isSubmitted"
+      type="password"
+      label="Password">
+      </text-input>
+
+      <!-- <div class="button">
         <button type="submit">Login</button>
-      </div>
+      </div> -->
+
+      <app-default-button text="Login"></app-default-button>
     </form>
   </div>
 </div>
