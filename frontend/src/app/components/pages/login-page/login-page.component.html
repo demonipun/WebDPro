@@ -7,7 +7,10 @@
       <input-container label="Email">
         <!-- anything we put here will be added in the ng-content section -->
         <input type="email" placeholder="Email" formControlName="email" />
-        <div class="error-list" *ngIf="fc['email'].errors && isSubmitted">Email either invalid or empty</div>
+
+        <!-- <div class="error-list" *ngIf="fc['email'].errors && isSubmitted">Email either invalid or empty</div> -->
+        <!-- the above line replaced when using Input Validator -->
+        <input-validation [control]="fc['email']" [showErrorsWhen]="isSubmitted"></input-validation>
       </input-container>
 
       <!-- ------------------------------------------ -->
