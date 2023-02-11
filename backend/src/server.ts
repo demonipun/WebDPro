@@ -1,9 +1,15 @@
+import dotenv from 'dotenv';
+dotenv.config();
+// process.env.MONGO_URI -> access the value defined in dotenv file
+
 import express from "express";
 import cors from "cors";
-import { sample_foods, sample_tags, sample_users } from "./data";
+// import { sample_foods, sample_tags, sample_users } from "./data";
 // import jwt from "jsonwebtoken"; // shifted
 import foodRouter from './routers/food.router'
 import userRouter from "./routers/user.router";
+import { dbConnect } from './configs/database.config';
+dbConnect(); // configs to connect to the Db imported and used -> we are connected to Atlas MongoDb using Mongoose
 
 const app = express();
 
