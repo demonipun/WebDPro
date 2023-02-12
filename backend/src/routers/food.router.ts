@@ -31,30 +31,82 @@ router.get("/seed", asyncHandler(
 
 // we need to implement all the methods available in food.service.ts
 
-router.get("/", (req, res) => {
-    res.send(sample_foods);
-})
+// using the ASYNC function directly results in INCONSISTENT BEHAVIOUR so we use "asyncHandler" instead
+router.get("/", asyncHandler(
+    async (req, res) => {
+        const foods = await FoodModel.find(); // gets all the values from the Db
+        res.send(foods);
+    })
+)
 
-router.get("/search/:searchTerm", (req, res) => {
-    const searchTerm = req.params.searchTerm;
-    const foods = sample_foods.filter(food => food.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    res.send(foods);
-})
+router.get("/search/:searchTerm", asyncHandler(
+    async (req, res) => {
+        // After seeding the Db with data.ts we have all the values in Db and now we want the values from Db instead of data.ts
+        // we want to create a search case insensitive using Regular Expression
+        const searchRegex = new RegExp(req.params.searchTerm, 'i');
+        const foods = await FoodModel.find({name: {$regex:searchRegex}}); // creating an object
 
-router.get("/tags", (req, res) => {
-    res.send(sample_tags);
-})
+        // const searchTerm = req.params.searchTerm;
+        // const foods = sample_foods.filter(food => food.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        res.send(foods);
+    })
+)
 
-router.get("/tag/:tagName", (req, res) => {
-    const tagName = req.params.tagName;
-    const foods = sample_foods.filter(food => food.tags?.includes(tagName));
-    res.send(foods);
-})
+router.get("/tags", asyncHandler(
+    async (req, res) => {
+        const tags = await FoodModel.aggregate([
+            {
+                // 2 foods 3 tags -> unwind tags => 6 foods tags ==> 
+                // converts tags which is an array into a normal field with only 1 value
+                // This way we can make a group and find similar ones and count them
+                $unwind: '$tags'
+            },
+            {
+                $group: {
+                    _id: '$tags',
+                    count: {$sum: 1} // for each tag we have sum with the value 1 -> add a new item to the count
+                    // count = number of tags
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    name: '$_id',
+                    count: '$count'
+                }
+            }
+        ]).sort({count: -1}); // -1 => descending
+        // after doing aggregation we want to sort it sort it according to descending(-1)
 
-router.get("/:foodId", (req, res) => {
-    const foodId = req.params.foodId;
-    const foods = sample_foods.find(food => food.id==foodId);
-    res.send(foods);
-})
+        const all = {
+            name : 'All',
+            count : await FoodModel.countDocuments()
+        }
+
+        // now we want to add 'All' at the beginning of the tags
+        tags.unshift(all)// unshift(add to the beginning) is exactly the opposite of push(add to the end)
+        res.send(tags);
+    })
+)
+
+router.get("/tag/:tagName", asyncHandler(
+    async (req, res) => {
+        const foods = await FoodModel.find({tags: req.params.tagName})
+      
+        // const tagName = req.params.tagName;
+        // const foods = sample_foods.filter(food => food.tags?.includes(tagName));
+        res.send(foods);
+    })
+)
+
+router.get("/:foodId",  asyncHandler(
+    async (req, res) => {
+        const food = await FoodModel.findById(req.params.foodId);
+
+        // const foodId = req.params.foodId;
+        // const food = sample_foods.find(food => food.id==foodId);
+        res.send(food);
+    })
+)
 
 export default router;
