@@ -2,7 +2,9 @@ import { Router } from "express";
 import { sample_users } from "../data";
 import jwt from "jsonwebtoken";
 import asyncHandler from 'express-async-handler'; // async handler
-import { UserModel } from "../models/user.model";
+import { User, UserModel } from "../models/user.model";
+import { HTTP_BAD_REQUEST } from "../constants/http_status";
+import bcrypt from 'bcryptjs'
 
 const router = Router();
 
@@ -41,10 +43,39 @@ router.post("/login", asyncHandler(
             res.send(generateTokenResponse(user));
         }
         else {
-            res.status(400).send("Invalid User!");
+            res.status(HTTP_BAD_REQUEST).send("Invalid User!");
         }
     })
 )
+
+// Register API
+router.post('/register', asyncHandler(
+    async (req, res) => {
+      const {name, email, password, address} = req.body; // Destructuring Assignment
+      const user = await UserModel.findOne({email}); // if already a user with this email is already registered
+      if(user){
+        res.status(HTTP_BAD_REQUEST)
+        .send('User is already Registered!');
+        return;
+      }
+  
+      const encryptedPassword = await bcrypt.hash(password, 10); // not saving the password directly inside the Db but hashing it!
+
+      // creating user object
+      const newUser:User = {
+        id:'', // will be generated automatically by Db (for by-passing the error)
+        name,
+        email: email.toLowerCase(),
+        password: encryptedPassword,
+        address,
+        isAdmin: false
+      }
+
+      // saving user object inside the Db
+      const dbUser = await UserModel.create(newUser);
+      res.send(generateTokenResponse(dbUser)); // generate Token and logging in the user
+    }
+  ))
 
 // jwt(jason web token) for generating response token
 const generateTokenResponse = (user: any) => {
