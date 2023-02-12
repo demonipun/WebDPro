@@ -1,8 +1,27 @@
 import { Router } from "express";
 import { sample_users } from "../data";
 import jwt from "jsonwebtoken";
+import asyncHandler from 'express-async-handler'; // async handler
+import { UserModel } from "../models/user.model";
 
 const router = Router();
+
+router.get("/seed", asyncHandler(
+    async (req, res) => { // we want to have an async function 0 -> the connection between Db and our code is asynchronous
+        // instead of async we can use then that but it makes the code little messy so prefer this
+
+        // to ensure that Db is not seeded => 
+        // count the number of items and if it is more than one that means that it is already seeded
+        const usersCount = await UserModel.countDocuments();
+        if(usersCount>0) {
+            res.send("Seed is done already!");
+            return;
+        }
+        
+        await UserModel.create(sample_users);
+        res.send("🤩Seed Is Done!");
+    })
+)
 
 // login api - send username and password for authenticating the user
 router.post("/login", (req, res) => {
