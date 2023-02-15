@@ -25,3 +25,9 @@
     justify-content: center;
     align-items: center;
   } */
+
+  .register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { user_login_url } from '../shared/constants/urls';
+import { user_login_url, user_register_url } from '../shared/constants/urls';
 import { IUserLogin } from '../shared/interfaces/IUserLogin';
+import { IUserRegister } from '../shared/interfaces/IUserRegister';
 import { User } from '../shared/models/user';
 
 const USER_KEY='User';
@@ -47,6 +48,26 @@ export class UserService {
         error: (errorResponse) => {
           // unhappy message
           this.toastrService.error(errorResponse.error, 'LoginFailed');
+        }
+      })
+    )
+  }
+
+  // Register functionality
+  register(userRegiser:IUserRegister): Observable<User>{
+    return this.http.post<User>(user_register_url, userRegiser).pipe(
+      tap({
+        next: (user) => { // happy part -> have a new user
+          this.setUserToLocalStorage(user);
+          this.userSubject.next(user);
+          this.toastrService.success(
+            `Welcome to the FoodJunction ${user.name}`,
+            'Register Successful'
+          )
+        },
+        error: (errorResponse) => {
+          this.toastrService.error(errorResponse.error,
+            'Register Failed')
         }
       })
     )

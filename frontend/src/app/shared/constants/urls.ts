@@ -13,3 +13,4 @@ export const foods_by_id_url = foods_url + '/';
 
 
 export const user_login_url = base_url + '/api/users/login';
+export const user_register_url = base_url + '/api/users/register';
