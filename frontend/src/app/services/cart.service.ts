@@ -54,7 +54,11 @@ export class CartService {
 
   getCartObservable(): Observable<Cart> {
     // if we send subject to the outside, we could be able to change the value of the subject from outside of the Cart Service but we don't want that to happen
-    return this.cartSubject.asObservable();
+    return this.cartSubject.asObservable(); // we do not need to work ewith Observable when we need the latest value
+  }
+
+  getCart(): Cart{ // the Subject always keeps the latest values so here we return the latest value of the cart
+    return this.cartSubject.value;
   }
 
   // To keep the data in Cart persistent so that it is data is not gone on refresh --> Local Storage

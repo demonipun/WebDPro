@@ -26,6 +26,10 @@ export class UserService {
     this.userObservable = this.userSubject.asObservable();
   }
 
+  public get currentUser(): User { // the latest value of the user BehaviourSubject
+    return this.userSubject.value;
+  }
+
   login(userLogin: IUserLogin): Observable<User> { // I => Interface
     // the main difference between an interface and a class is that a new instance of an interface cannot be created
 
