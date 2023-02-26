@@ -1,3 +1,4 @@
+import { LatLng } from "leaflet";
 import { CartItems } from "./cartItems";
 
 // We create the Checkout Page so for that we need Order model,
@@ -8,6 +9,7 @@ export class Order {
   totalPrice!: number;
   name!: string;
   address!: string;
+  addressLatLng?: LatLng; // adding optional field for latitude & longitude
   paymentId!: string;
   createdAt!: string;
   status!: string;
